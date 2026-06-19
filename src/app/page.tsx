@@ -221,11 +221,11 @@ export default function Home() {
               <div className="overflow-hidden rounded-4xl border border-white/10 bg-white/10 shadow-2xl shadow-black/30 backdrop-blur-sm">
                 <div className="relative aspect-4/5 w-full">
                   <img
-                    src="/images/hero-clinic.jpg"
+                    src="https://images.unsplash.com/photo-1596272875729-ed2ff7d6d9c5?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                     alt="Interior de la clínica veterinaria"
                     // fill
                     // priority
-                    className="object-cover"
+                    className="object-cover h-full w-full"
                   />
                 </div>
                 <div className="border-t border-white/10 bg-blue-950/55 p-5">
@@ -295,15 +295,16 @@ export default function Home() {
               </div>
               <div className="grid gap-4 bg-white/5 p-7 sm:p-8 sm:grid-cols-3">
                 {[
-                  ["Perro", "/images/dog-category.jpg", 800, 800],
-                  ["Gato y accesorios", "/images/cat-accessories.jpg", 800, 800],
+                  ["Perro", "https://images.unsplash.com/photo-1589924749359-9697080c3577?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", 800, 800],
+                  ["Gato", "https://plus.unsplash.com/premium_photo-1695267061085-0f7cfca592bd?q=80&w=1471&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", 800, 800],
+                  ["Accesorios", "https://images.unsplash.com/photo-1589924648735-e4ddb20adeee?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", 800, 800],
                 ].map(([label, src, width, height]) => (
                   <div key={label as string} className="overflow-hidden rounded-3xl border border-white/10 bg-blue-900">
                     <div className="relative aspect-square w-full">
-                      <Image
+                      <img
                         src={src as string}
                         alt={label as string}
-                        fill
+                        // fill
                         loading="lazy"
                         sizes="(max-width: 1024px) 50vw, 18vw"
                         className="object-cover"
