@@ -223,7 +223,7 @@ export default function Home() {
                   className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/10 px-6 py-4 text-base font-semibold text-white backdrop-blur transition hover:bg-white/15"
                 >
                   <span className="material-symbols-outlined text-[20px]">location_on</span>
-                  Ubicación
+                  Ver Mapa
                 </Link>
               </div>
 
@@ -441,7 +441,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="contacto" className="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8 flex gap-8">
+        <section id="contacto" className="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8 flex flex-col sm:flex-row gap-8">
           {/* Contact Info */}
           <div className="rounded-4xl border border-blue-200 bg-white p-7 shadow-xl shadow-blue-200/60 sm:p-8">
             <p className="text-sm font-semibold uppercase tracking-[0.28em] text-red-600">Contacto</p>
@@ -451,14 +451,6 @@ export default function Home() {
             </p>
 
             <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-              {/* 
-              <Link href={emailLink} className="flex flex-col w-min items-start justify-center gap-0 rounded-3xl border border-blue-200 bg-blue-50 p-5 transition hover:border-red-200 hover:bg-red-50">
-                <div className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-[28px] text-red-600">email</span>
-                  <p className="text-sm font-semibold text-blue-950">Correo</p>
-                </div>
-                <p className="text-sm text-blue-600">hola@animalsveterinaria.com</p>
-              </Link> */}
               {[
                 ["Llamar", "call", callLink, phoneNumber],
                 ["WhatsApp", "chat", whatsappLink + whatsMessages.cita, whatsNumber],
