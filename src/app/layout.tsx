@@ -15,6 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Animal's Clinica Veterinaria",
   description: "Clínica Veterinaria Animal's, cuidando a tus mascotas con amor y profesionalismo. Ofrecemos servicios de salud, vacunación, cirugía y atención personalizada para perros, gatos y pequeños animales. ¡Agenda tu cita hoy mismo!",
+  icons: "/images/logo.svg",
   keywords: [
     "clínica veterinaria",
     "veterinaria",

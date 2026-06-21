@@ -1,8 +1,5 @@
-"use client";
-
-import Image from "next/image";
+import LightBox from "@/components/LightBox";
 import Link from "next/link";
-import { useMemo, useState } from "react";
 
 // CONTACT INFO
 const phoneNumber = "+524422176238";
@@ -142,9 +139,8 @@ const quickLinks = Object.values(pageLinks).map(({ title, id }) => [title, `#${i
 export default function Home() {
   // const [activeMap, setActiveMap] = useState(true);
   const activeMap = true; // always show map, no need to click to activate
-  const [selectedImage, setSelectedImage] = useState<(typeof gallery)[number] | null>(null);
+  // const [selectedImage, setSelectedImage] = useState<(typeof gallery)[number] | null>(null);
 
-  const galleryPreview = useMemo(() => gallery.slice(0, 6), []);
 
   return (
     <main className="min-h-screen bg-blue-50 text-blue-900">
@@ -361,7 +357,7 @@ export default function Home() {
             </div>
 
             <div className="flex flex-col justify-center">
-              <p className="text-sm font-semibold uppercase tracking-[0.28em] text-red-600">Sobre el Vet</p>
+              <p className="text-sm font-semibold uppercase tracking-[0.28em] text-red-600">Veterinario titular</p>
               <h2 className="mt-3 text-3xl font-black tracking-tight text-blue-950 sm:text-4xl">MVZ. Lenin Mendez Arriaga</h2>
               <p className="mt-4 max-w-2xl text-base leading-8 text-blue-600">
                 Médico veterinario con años de experiencia en consulta, cirugía, ortopedia y medicina interna. Su enfoque es práctico, humano y claro: explicar cada paso, priorizar el bienestar del paciente y acompañar a la familia con decisiones bien informadas.
@@ -393,58 +389,9 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {galleryPreview.map((image) => (
-              <button
-                key={image.src}
-                type="button"
-                onClick={() => setSelectedImage(image)}
-                className="group overflow-hidden rounded-3xl border border-blue-200 bg-white text-left shadow-sm transition hover:-tranblue-y-1 hover:shadow-xl"
-              >
-                <img
-                  src={image.src}
-                  alt={image.alt}
-                  // fill
-                  loading="lazy"
-                  className="object-cover aspect-video transition duration-500 group-hover:scale-[1.03]"
-                />
-                <div className="flex items-center justify-between gap-3 p-4">
-                  <div>
-                    <p className="text-sm font-semibold text-blue-950">{image.label}</p>
-                    <p className="text-sm text-blue-500">Toca para ampliar</p>
-                  </div>
-                  <span className="material-symbols-outlined text-[20px] text-red-600">open_in_full</span>
-                </div>
-              </button>
-            ))}
-          </div>
-
           <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {gallery.slice(6).map((image) => (
-              <button
-                key={image.src}
-                type="button"
-                onClick={() => setSelectedImage(image)}
-                className="group overflow-hidden rounded-3xl border border-blue-200 bg-white text-left shadow-sm transition hover:-tranblue-y-1 hover:shadow-xl"
-              >
-                <div className="relative aspect-4/3 w-full bg-blue-100">
-                  <Image
-                    src={image.src}
-                    alt={image.alt}
-                    fill
-                    loading="lazy"
-                    sizes="(max-width: 768px) 100vw, 31vw"
-                    className="object-cover transition duration-500 group-hover:scale-[1.03]"
-                  />
-                </div>
-                <div className="flex items-center justify-between gap-3 p-4">
-                  <div>
-                    <p className="text-sm font-semibold text-blue-950">{image.label}</p>
-                    <p className="text-sm text-blue-500">Toca para ampliar</p>
-                  </div>
-                  <span className="material-symbols-outlined text-[20px] text-red-600">open_in_full</span>
-                </div>
-              </button>
+            {gallery.map((image, index) => (
+              <LightBox key={index} galleryImage={image} />
             ))}
           </div>
         </section>
@@ -494,55 +441,56 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="contacto" className="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-          <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
-            <div className="rounded-4xl border border-blue-200 bg-white p-7 shadow-xl shadow-blue-200/60 sm:p-8">
-              <p className="text-sm font-semibold uppercase tracking-[0.28em] text-red-600">Contacto</p>
-              <h2 className="mt-3 text-3xl font-black tracking-tight text-blue-950 sm:text-4xl">Agenda la atención de tu mascota hoy</h2>
-              <p className="mt-4 max-w-2xl text-base leading-7 text-blue-600">
-                Acceso directo por llamada, WhatsApp o correo. El mensaje ya viene listo para ahorrar tiempo.
-              </p>
+        <section id="contacto" className="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8 flex gap-8">
+          {/* Contact Info */}
+          <div className="rounded-4xl border border-blue-200 bg-white p-7 shadow-xl shadow-blue-200/60 sm:p-8">
+            <p className="text-sm font-semibold uppercase tracking-[0.28em] text-red-600">Contacto</p>
+            <h2 className="mt-3 text-3xl font-black tracking-tight text-blue-950 sm:text-4xl">Agenda la atención de tu mascota hoy</h2>
+            <p className="mt-4 max-w-2xl text-base leading-7 text-blue-600">
+              Acceso directo por llamada, WhatsApp o correo. El mensaje ya viene listo para ahorrar tiempo.
+            </p>
 
-              <div className="mt-8 grid gap-4 sm:grid-cols-3">
-                <Link href={callLink} className="flex items-center gap-4 rounded-3xl border border-blue-200 bg-blue-50 p-5 transition hover:border-red-200 hover:bg-red-50">
-                  <span className="material-symbols-outlined text-[28px] text-red-600">call</span>
-                  <div>
-                    <p className="text-sm font-semibold text-blue-950">Llamar</p>
-                    <p className="text-sm text-blue-600">{phoneNumber}</p>
-                  </div>
-                </Link>
-                <Link href={whatsappLink} className="flex items-center gap-4 rounded-3xl border border-blue-600 bg-blue-100 p-5 transition hover:bg-blue-200">
-                  <span className="material-symbols-outlined text-[28px] text-red-600">chat</span>
-                  <div>
-                    <p className="text-sm font-semibold text-blue-950">WhatsApp</p>
-                    <p className="text-sm text-blue-600">{phoneNumber}</p>
-                  </div>
-                </Link>
-                <Link href={emailLink} className="flex items-center gap-4 rounded-3xl border border-blue-200 bg-blue-50 p-5 transition hover:border-red-200 hover:bg-red-50">
+            <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+              {/* 
+              <Link href={emailLink} className="flex flex-col w-min items-start justify-center gap-0 rounded-3xl border border-blue-200 bg-blue-50 p-5 transition hover:border-red-200 hover:bg-red-50">
+                <div className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-[28px] text-red-600">email</span>
-                  <div>
-                    <p className="text-sm font-semibold text-blue-950">Correo</p>
-                    <p className="text-sm text-blue-600">hola@animalsveterinaria.com</p>
+                  <p className="text-sm font-semibold text-blue-950">Correo</p>
+                </div>
+                <p className="text-sm text-blue-600">hola@animalsveterinaria.com</p>
+              </Link> */}
+              {[
+                ["Llamar", "call", callLink, phoneNumber],
+                ["WhatsApp", "chat", whatsappLink + whatsMessages.cita, whatsNumber],
+                ["Correo", "email", emailLink, "hola@animalsveterinaria.com"],
+              ].map(([label, icon, href, contact]) => (
+                <Link key={label} href={href} className="flex flex-col w-full items-start justify-center gap-0 rounded-3xl border border-blue-200 bg-blue-50 p-5 transition hover:border-red-200 hover:bg-red-50">
+                  <div className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[28px] text-red-600">{icon}</span>
+                    <p className="text-sm font-semibold text-blue-950">{label}</p>
                   </div>
+                  <p className="text-sm text-blue-600">{contact}</p>
                 </Link>
-              </div>
+              ))}
+                
+            </div>
+          </div>
+
+          {/* Horario */}
+          <div className="rounded-4xl border border-blue-200 bg-blue-950 p-7 text-white shadow-xl shadow-blue-200/60 sm:p-8">
+            <p className="text-sm font-semibold uppercase tracking-[0.28em] text-red-400">Horario</p>
+            <h3 className="mt-3 text-2xl font-black">Estamos listos para atender</h3>
+            <div className="mt-6 space-y-3">
+              {hours.map(([day, range]) => (
+                <div key={day} className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+                  <span className="text-sm font-medium text-blue-100">{day}</span>
+                  <span className="text-sm text-blue-300">{range}</span>
+                </div>
+              ))}
             </div>
 
-            <div className="rounded-4xl border border-blue-200 bg-blue-950 p-7 text-white shadow-xl shadow-blue-200/60 sm:p-8">
-              <p className="text-sm font-semibold uppercase tracking-[0.28em] text-red-400">Horario</p>
-              <h3 className="mt-3 text-2xl font-black">Estamos listos para atender</h3>
-              <div className="mt-6 space-y-3">
-                {hours.map(([day, range]) => (
-                  <div key={day} className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
-                    <span className="text-sm font-medium text-blue-100">{day}</span>
-                    <span className="text-sm text-blue-300">{range}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-6 rounded-3xl border border-white/10 bg-white/5 p-5 text-sm leading-6 text-blue-300">
-                Mensaje sugerido: Hola, quisiera agendar una cita para mi mascota.
-              </div>
+            <div className="mt-6 rounded-3xl border border-white/10 bg-white/5 p-5 text-sm leading-6 text-blue-300">
+              Mensaje sugerido: Hola, quisiera agendar una cita para mi mascota.
             </div>
           </div>
         </section>
@@ -557,11 +505,11 @@ export default function Home() {
               </div>
               <div>
                 <p className="font-semibold text-blue-950">Animal&apos;s Veterinary Clinic</p>
-                <p className="text-sm text-blue-600">Cédula profesional 1234567 | Ciudad, Estado</p>
+                <p className="text-sm text-blue-600">Cédula profesional 3862786 | MVZ Lenin Mendez Arriaga</p>
               </div>
             </div>
             <p className="mt-4 max-w-2xl text-sm leading-6 text-blue-600">
-              Cuidado veterinario pensado para responder rápido, explicar claro y dar confianza desde el primer contacto.
+              Cuidado veterinario integral con enfoque humano y práctico. Consulta, cirugía, rayos X, vacunas y más para tu mascota.
             </p>
           </div>
 
@@ -602,30 +550,7 @@ export default function Home() {
         WhatsApp
       </Link>
 
-      {selectedImage ? (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-60 flex items-center justify-center bg-blue-950/90 px-4 py-6 backdrop-blur-sm"
-          onClick={() => setSelectedImage(null)}
-        >
-          <div className="relative w-full max-w-5xl overflow-hidden rounded-4xl border border-white/10 bg-white shadow-2xl" onClick={(event) => event.stopPropagation()}>
-            <button
-              type="button"
-              onClick={() => setSelectedImage(null)}
-              className="absolute right-3 top-3 z-10 inline-flex h-11 w-11 items-center justify-center rounded-full bg-blue-950/80 text-white transition hover:bg-blue-950"
-            >
-              <span className="material-symbols-outlined text-[22px]">close</span>
-            </button>
-            <div className="relative aspect-16/10 w-full bg-blue-100">
-              <img src={selectedImage.src} alt={selectedImage.alt} sizes="100vw" className="object-cover" />
-            </div>
-            <div className="p-5">
-              <p className="text-sm font-semibold text-blue-950">{selectedImage.label}</p>
-            </div>
-          </div>
-        </div>
-      ) : null}
+
     </main>
   );
 }
