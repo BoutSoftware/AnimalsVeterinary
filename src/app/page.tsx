@@ -1,23 +1,26 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useMemo, useState } from "react";
 
+// CONTACT INFO
 const phoneNumber = "+524422176238";
-const whatsappLink = `https://wa.me/${phoneNumber.replace(/\D/g, "")}?text=${encodeURIComponent(
-  "Hola, quisiera agendar una cita para mi mascota."
-)}`;
+const whatsNumber = "+524422332002";
+const whatsMessages = Object.fromEntries(Object.entries({
+  cita: "Hola, quisiera agendar una cita para mi mascota.",
+  info: "Hola, tengo preguntas sobre sus servicios.",
+  tienda: "Hola, quisiera preguntar por la disponibilidad de ...",
+  emergency: "Hola, necesito ayuda con una emergencia veterinaria.",
+}).map(([key, value]) => [key, encodeURIComponent(value)]));
+const whatsappLink = `https://wa.me/${whatsNumber.replace(/\D/g, "")}?text=`; // add message with encode uri
 const callLink = `tel:${phoneNumber}`;
 const emailLink = "mailto:hola@animalsveterinaria.com";
-const mapLinkAddress = "Animals Clinica Veterinaria Diamante 35, San Roque, 76168 Santiago de Querétaro, Qro"
-const mapLink = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(mapLinkAddress);
-const mapEmbed = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3734.5699959245126!2d-100.39956912398063!3d20.605610902176267!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d35ad8daea0377%3A0x54a5fbc460d5b037!2sVeterinary%20Clinic%20Animal&#39;s!5e0!3m2!1sen!2smx!4v1781883026038!5m2!1sen!2smx";
+const mapsAddress = "Animals Clinica Veterinaria Diamante 35, San Roque, 76168 Santiago de Querétaro, Qro"
+const mapsAddressLink = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(mapsAddress);
+const mapsDirectLink = "https://maps.app.goo.gl/fhworHdvXFFFGTUf8";
 
-/*
-<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3734.5699959245126!2d-100.39956912398063!3d20.605610902176267!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d35ad8daea0377%3A0x54a5fbc460d5b037!2sVeterinary%20Clinic%20Animal&#39;s!5e0!3m2!1sen!2smx!4v1781883026038!5m2!1sen!2smx" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-*/
-
-
+// DYNAMIC INFO:
 const services = [
   {
     title: "Consulta general",
@@ -26,75 +29,74 @@ const services = [
     description: "Revisión completa, diagnóstico inicial y plan claro para tu mascota.",
   },
   {
-    title: "Cirugía",
+    title: "Cirugía y Traumatología",
     icon: "syringe",
     price: "Pregunta por precios.",
-    description: "Esterilización, cirugía de tejidos blandos y procedimientos ortopédicos.",
+    description: "Esterilización, cirugía, traumatología y procedimientos ortopédicos.",
   },
   {
-    title: "Rayos X",
+    title: "Rayos X y Ultrasonido",
     icon: "scan",
-    price: "$800.00",
+    price: "$500.00",
     description: "Apoyo para detectar fracturas, cuerpos extraños y problemas internos.",
   },
   {
     title: "Hospitalización",
     icon: "hotel",
-    price: "Pregunta por precios.",
+    price: null,
     description: "Monitoreo cercano y atención continua cuando tu paciente necesita quedarse.",
   },
+  // {
+  //   title: "Medicina interna",
+  //   icon: "science",
+  //   price: "Pregunta por precios.",
+  //   description: "Seguimiento de enfermedades crónicas, digestivas, hormonales y metabólicas.",
+  // },
   {
-    title: "Medicina interna",
-    icon: "science",
-    price: "Pregunta por precios.",
-    description: "Seguimiento de enfermedades crónicas, digestivas, hormonales y metabólicas.",
+    title: "Limpieza dental",
+    icon: "dentistry",
+    price: "$700.00 - $1,200.00",
+    description: "Limpieza profesional y profilaxis para mantener la salud bucal de tu mascota.",
   },
   {
     title: "Vacunas y desparasitantes",
     icon: "vaccines",
-    price: "Pregunta por precios.",
+    price: null,
     description: "Protección contra enfermedades comunes y control de parásitos externos e internos.",
   },
 ];
 
 const gallery = [
   {
-    src: "/images/clinic-exterior.jpg",
+    src: "https://plus.unsplash.com/premium_photo-1663039950073-187c977da2e9?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     alt: "Fachada de la clínica veterinaria",
     label: "Exterior",
     width: 1200,
     height: 900,
   },
   {
-    src: "/images/exam-room.jpg",
+    src: "https://images.unsplash.com/photo-1654895716780-b4664497420d?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     alt: "Consultorio de revisión veterinaria",
     label: "Consultorio",
     width: 1200,
     height: 900,
   },
   {
-    src: "/images/surgery-room.jpg",
+    src: "https://images.unsplash.com/photo-1551076805-e1869033e561?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     alt: "Quirófano veterinario",
     label: "Quirófano",
     width: 1200,
     height: 900,
   },
   {
-    src: "/images/xray-equipment.jpg",
+    src: "https://plus.unsplash.com/premium_photo-1663133499103-ab63c5533bf4?q=80&w=1472&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     alt: "Equipo de rayos X veterinario",
     label: "Rayos X",
     width: 1200,
     height: 900,
   },
   {
-    src: "/images/laser-therapy.jpg",
-    alt: "Equipo para terapia láser",
-    label: "Terapia láser",
-    width: 1200,
-    height: 900,
-  },
-  {
-    src: "/images/hospitalization-area.jpg",
+    src: "https://images.unsplash.com/photo-1553688738-a278b9f063e0?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     alt: "Área de hospitalización veterinaria",
     label: "Hospitalización",
     width: 1200,
@@ -108,17 +110,38 @@ const hours = [
   ["Domingo", "10:00 - 14:00"],
 ];
 
-const quickLinks = [
-  ["Inicio", "#inicio"],
-  ["Servicios", "#servicios"],
-  ["Galería", "#galeria"],
-  ["Sobre el Vet", "#sobre-el-vet"],
-  ["Ubicación", "#ubicacion"],
-  ["Contacto", "#contacto"],
-];
+// NAVIGATION INFO
+const pageLinks = {
+  inicio: {
+    title: "Inicio",
+    id: "inicio",
+  },
+  servicios: {
+    title: "Servicios",
+    id: "servicios",
+  },
+  galeria: {
+    title: "Galería",
+    id: "galeria",
+  },
+  veterinarioTitular: {
+    title: "Veterinario Titular",
+    id: "veterinario-titular",
+  },
+  ubicacion: {
+    title: "Ubicación",
+    id: "ubicacion",
+  },
+  contacto: {
+    title: "Contacto",
+    id: "contacto",
+  }
+}
+const quickLinks = Object.values(pageLinks).map(({ title, id }) => [title, `#${id}`] as const);
 
 export default function Home() {
-  const [activeMap, setActiveMap] = useState(true);
+  // const [activeMap, setActiveMap] = useState(true);
+  const activeMap = true; // always show map, no need to click to activate
   const [selectedImage, setSelectedImage] = useState<(typeof gallery)[number] | null>(null);
 
   const galleryPreview = useMemo(() => gallery.slice(0, 6), []);
@@ -127,82 +150,92 @@ export default function Home() {
     <main className="min-h-screen bg-blue-50 text-blue-900">
       <header className="sticky top-0 z-50 border-b border-blue-200/80 bg-white/90 backdrop-blur-xl">
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
-          <a href="#inicio" className="flex items-center gap-3">
-            <div className="h-12 w-12 shrink-0 rounded-2xl bg-blue-900 text-white flex items-center justify-center">
+          <Link href="#inicio" className="flex items-center gap-3">
+            {/* <div className="h-12 w-12 shrink-0 rounded-2xl bg-blue-900 text-white flex items-center justify-center">
               <span className="material-symbols-outlined">pets</span>
-            </div>
+            </div> */}
+            <img src="/images/logo.svg" alt="Logo de Animal's Clinica Veterinaria" className="h-12 w-auto" />
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-red-600">
+              <p className="text-sm font-semibold uppercase tracking-wider text-red-600">
                 Animal&apos;s Clinica Veterinaria
               </p>
             </div>
-          </a>
+          </Link>
 
           {/* <nav className="hidden items-center gap-6 lg:flex">
             {quickLinks.map(([label, href]) => (
-              <a key={label} href={href} className="text-sm font-medium text-blue-700 transition hover:text-blue-950">
+              <Link key={label} href={href} className="text-sm font-medium text-blue-700 transition hover:text-blue-950">
                 {label}
-              </a>
+              </Link>
             ))}
           </nav> */}
 
           <div className="flex items-center gap-2 sm:gap-3">
-            <a
+            <Link
               href={callLink}
               className="inline-flex h-11 items-center gap-2 rounded-full border border-blue-200 bg-white px-4 text-sm font-semibold text-blue-800 shadow-sm transition hover:border-blue-300 hover:bg-blue-50"
             >
               <span className="material-symbols-outlined text-[20px] text-red-600">call</span>
               <span className="hidden sm:inline">Llamar</span>
-            </a>
-            <a
+            </Link>
+            <Link
               href={whatsappLink}
               className="inline-flex h-11 items-center gap-2 rounded-full bg-red-600 px-4 text-sm font-semibold text-white shadow-lg shadow-red-600/25 transition hover:bg-red-700"
             >
               <span className="material-symbols-outlined text-[20px]">chat</span>
               <span className="hidden sm:inline">WhatsApp</span>
-            </a>
+            </Link>
           </div>
         </div>
       </header>
 
       <div id="contenido">
         {/* Hero */}
-        <section id="inicio" className="relative overflow-hidden bg-blue-950 text-white">
+        <section id={pageLinks.inicio.id} className="relative overflow-hidden bg-blue-950 text-white">
+          {/* Gradient Background */}
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(220,38,38,0.32),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(255,255,255,0.1),transparent_28%)]" />
           <div className="absolute inset-0 bg-linear-to-r from-blue-950 to-blue-900" />
+
+          {/* Content */}
           <div className="relative mx-auto grid min-h-[calc(100svh-80px)] w-full max-w-7xl items-center gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:px-8 lg:py-20">
             <div className="max-w-2xl">
-              {/* <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm text-white/85 backdrop-blur">
-                <span className="material-symbols-outlined text-[18px] text-red-400">location_on</span>
-                Atención rápida, trato humano y contacto directo por WhatsApp
-              </div> */}
               <h1 className="text-4xl font-black leading-tight tracking-tight sm:text-5xl lg:text-6xl">
-                Cuidado veterinario integral
+                Clinica veterinaria integral
               </h1>
               <p className="mt-5 max-w-xl text-base leading-7 text-blue-200 sm:text-lg">
-                Cirugía, rayos X, terapia láser y hospitalización en un solo lugar.
+                Consulta, cirugía, rayos X, vacunas, hospitalización y más, en un solo lugar.
               </p>
+
+              {/* CTA Buttons */}
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <a
-                  href={whatsappLink}
+                <Link
+                  href={whatsappLink + whatsMessages.cita}
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-red-600 px-6 py-4 text-base font-semibold text-white shadow-xl shadow-red-600/25 transition hover:bg-red-700"
                 >
                   <span className="material-symbols-outlined text-[20px]">chat</span>
                   Agenda por WhatsApp
-                </a>
-                <a
+                </Link>
+                <Link
                   href={callLink}
                   className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/10 px-6 py-4 text-base font-semibold text-white backdrop-blur transition hover:bg-white/15"
                 >
                   <span className="material-symbols-outlined text-[20px]">call</span>
-                  Llamar ahora
-                </a>
+                  Llamar
+                </Link>
+                <Link
+                  href={mapsDirectLink}
+                  className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/10 px-6 py-4 text-base font-semibold text-white backdrop-blur transition hover:bg-white/15"
+                >
+                  <span className="material-symbols-outlined text-[20px]">location_on</span>
+                  Ubicación
+                </Link>
               </div>
+
               <dl className="mt-10 grid gap-4 sm:grid-cols-3">
                 {[
                   ["+10 años", "de experiencia clínica"],
-                  ["Atención", "por cita y urgencias"],
-                  ["WhatsApp", "respuesta directa"],
+                  ["Consulta", "por cita y urgencias"],
+                  ["Atencion", "rápida y profesional"],
                 ].map(([value, label]) => (
                   <div key={value} className="rounded-3xl border border-white/10 bg-white/8 p-4 backdrop-blur-sm">
                     <dt className="text-2xl font-bold text-white">{value}</dt>
@@ -242,7 +275,7 @@ export default function Home() {
         </section>
 
         {/* Servicios */}
-        <section id="servicios" className="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+        <section id={pageLinks.servicios.id} className="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
           {/* Title */}
           <div className="max-w-2xl">
             <p className="text-sm font-semibold uppercase tracking-[0.28em] text-red-600">Servicios</p>
@@ -266,10 +299,12 @@ export default function Home() {
                   <div>
                     <h3 className="text-xl font-bold text-blue-950">{service.title}</h3>
                     <p className="mt-2 text-sm leading-6 text-blue-600">{service.description}</p>
-                    <p className="mt-4 inline-flex items-center gap-2 rounded-full bg-red-50 px-3 py-1 text-sm font-semibold text-red-700">
-                      <span className="material-symbols-outlined text-[16px]">payments</span>
-                      {service.price}
-                    </p>
+                    {service.price && (
+                      <p className="mt-4 inline-flex items-center gap-2 rounded-full bg-red-50 px-3 py-1 text-sm font-semibold text-red-700">
+                        <span className="material-symbols-outlined text-[16px]">payments</span>
+                        {service.price}
+                      </p>
+                    )}
                   </div>
                 </div>
               </article>
@@ -278,60 +313,51 @@ export default function Home() {
 
           {/* Store */}
           <div className="mt-8 overflow-hidden rounded-[1.75rem] border border-blue-200 bg-blue-950 text-white shadow-xl shadow-blue-200/60">
-            <div className="grid gap-0 lg:grid-cols-[0.9fr_1.1fr]">
-              <div className="p-7 sm:p-8">
-                <p className="text-sm font-semibold uppercase tracking-[0.28em] text-red-400">Tienda</p>
-                <h3 className="mt-3 text-2xl font-black">También contamos con alimento, equipo y accesorios</h3>
-                <p className="mt-3 max-w-xl text-sm leading-6 text-blue-300">
-                  Pregunta disponibilidad por WhatsApp y te compartimos opciones para perro, gato y accesorios básicos.
-                </p>
-                <a
-                  href={whatsappLink}
-                  className="mt-6 inline-flex items-center gap-2 rounded-full bg-red-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-red-700"
-                >
-                  <span className="material-symbols-outlined text-[18px]">shopping_bag</span>
-                  Pregúntanos disponibilidad
-                </a>
-              </div>
-              <div className="grid gap-4 bg-white/5 p-7 sm:p-8 sm:grid-cols-3">
-                {[
-                  ["Perro", "https://images.unsplash.com/photo-1589924749359-9697080c3577?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", 800, 800],
-                  ["Gato", "https://plus.unsplash.com/premium_photo-1695267061085-0f7cfca592bd?q=80&w=1471&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", 800, 800],
-                  ["Accesorios", "https://images.unsplash.com/photo-1589924648735-e4ddb20adeee?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", 800, 800],
-                ].map(([label, src, width, height]) => (
-                  <div key={label as string} className="overflow-hidden rounded-3xl border border-white/10 bg-blue-900">
-                    <div className="relative aspect-square w-full">
-                      <img
-                        src={src as string}
-                        alt={label as string}
-                        // fill
-                        loading="lazy"
-                        sizes="(max-width: 1024px) 50vw, 18vw"
-                        className="object-cover"
-                      />
-                    </div>
-                    <div className="border-t border-white/10 p-4 text-sm font-semibold text-white">{label as string}</div>
-                    <div className="hidden" data-width={width} data-height={height} />
-                  </div>
-                ))}
-              </div>
+            <div className="p-7 sm:p-8">
+              <p className="text-sm font-semibold uppercase tracking-[0.28em] text-red-400">Tienda</p>
+              <h3 className="mt-3 text-2xl font-black">También contamos con alimento, equipo y accesorios</h3>
+              <p className="mt-3 max-w-xl text-sm leading-6 text-blue-300">
+                Pregunta disponibilidad por WhatsApp y te compartimos opciones para perro, gato y accesorios básicos.
+              </p>
+              <Link
+                href={whatsappLink + whatsMessages.tienda}
+                className="mt-6 inline-flex items-center gap-2 rounded-full bg-red-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-red-700"
+              >
+                <span className="material-symbols-outlined text-[18px]">shopping_bag</span>
+                Pregúntanos disponibilidad
+              </Link>
+            </div>
+            <div className="grid gap-4 bg-white/5 p-7 sm:p-8 sm:grid-cols-3">
+              {[
+                ["Perro", "https://images.unsplash.com/photo-1589924749359-9697080c3577?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", 800, 800],
+                ["Gato", "https://plus.unsplash.com/premium_photo-1695267061085-0f7cfca592bd?q=80&w=1471&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", 800, 800],
+                ["Accesorios", "https://images.unsplash.com/photo-1589924648735-e4ddb20adeee?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", 800, 800],
+              ].map(([label, src, width, height]) => (
+                <div key={label as string} className="overflow-hidden rounded-3xl border border-white/10 bg-blue-900">
+                  <img
+                    src={src as string}
+                    alt={label as string}
+                    // fill
+                    loading="lazy"
+                    className="object-cover aspect-video"
+                  />
+                  <div className="border-t border-white/10 p-4 text-sm font-semibold text-white">{label as string}</div>
+                  <div className="hidden" data-width={width} data-height={height} />
+                </div>
+              ))}
             </div>
           </div>
         </section>
 
-        <section id="sobre-el-vet" className="bg-white">
+        <section id="veterinario-titular" className="bg-white">
           <div className="mx-auto grid w-full max-w-7xl gap-10 px-4 py-20 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
-            <div className="overflow-hidden rounded-4xl border border-blue-200 bg-blue-100 shadow-xl shadow-blue-200/70">
-              <div className="relative aspect-4/5 w-full">
-                <img
-                  src="/images/vet-portrait.jpg"
-                  alt="Fotografía del veterinario principal"
-                  // fill
-                  loading="lazy"
-                  sizes="(max-width: 1024px) 100vw, 38vw"
-                  className="object-cover"
-                />
-              </div>
+            <div className="overflow-hidden rounded-4xl border border-blue-200 bg-blue-100 shadow-xl shadow-blue-200/70 aspect-4/5">
+              <img
+                src="https://plus.unsplash.com/premium_photo-1661963697387-9ba753d0df95?q=80&w=688&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                alt="Fotografía del veterinario principal"
+                loading="lazy"
+                className="object-cover"
+              />
             </div>
 
             <div className="flex flex-col justify-center">
@@ -343,7 +369,7 @@ export default function Home() {
 
               <div className="mt-8 grid gap-4 sm:grid-cols-2">
                 {[
-                  "Cédula profesional: 1234567",
+                  "Cédula profesional: 3862786",
                   "Certificación en ortopedia veterinaria",
                   "Certificación en cirugía de tejidos blandos",
                   "Actualización continua en medicina interna",
@@ -373,18 +399,15 @@ export default function Home() {
                 key={image.src}
                 type="button"
                 onClick={() => setSelectedImage(image)}
-                className="group overflow-hidden rounded-[1.5rem] border border-blue-200 bg-white text-left shadow-sm transition hover:-tranblue-y-1 hover:shadow-xl"
+                className="group overflow-hidden rounded-3xl border border-blue-200 bg-white text-left shadow-sm transition hover:-tranblue-y-1 hover:shadow-xl"
               >
-                <div className="relative aspect-[4/3] w-full bg-blue-100">
-                  <Image
-                    src={image.src}
-                    alt={image.alt}
-                    fill
-                    loading="lazy"
-                    sizes="(max-width: 768px) 100vw, 31vw"
-                    className="object-cover transition duration-500 group-hover:scale-[1.03]"
-                  />
-                </div>
+                <img
+                  src={image.src}
+                  alt={image.alt}
+                  // fill
+                  loading="lazy"
+                  className="object-cover aspect-video transition duration-500 group-hover:scale-[1.03]"
+                />
                 <div className="flex items-center justify-between gap-3 p-4">
                   <div>
                     <p className="text-sm font-semibold text-blue-950">{image.label}</p>
@@ -402,9 +425,9 @@ export default function Home() {
                 key={image.src}
                 type="button"
                 onClick={() => setSelectedImage(image)}
-                className="group overflow-hidden rounded-[1.5rem] border border-blue-200 bg-white text-left shadow-sm transition hover:-tranblue-y-1 hover:shadow-xl"
+                className="group overflow-hidden rounded-3xl border border-blue-200 bg-white text-left shadow-sm transition hover:-tranblue-y-1 hover:shadow-xl"
               >
-                <div className="relative aspect-[4/3] w-full bg-blue-100">
+                <div className="relative aspect-4/3 w-full bg-blue-100">
                   <Image
                     src={image.src}
                     alt={image.alt}
@@ -436,21 +459,17 @@ export default function Home() {
               </p>
 
               <div className="mt-8 space-y-4 rounded-[1.75rem] border border-white/10 bg-white/5 p-6">
-                <a href={mapLink} className="block text-lg font-semibold text-white transition hover:text-red-300">
+                <Link href={mapsAddressLink} className="block text-lg font-semibold text-white transition hover:text-red-300">
                   Diamante 35, San Roque, 76168 Santiago de Querétaro, Qro.
-                </a>
-                <p className="text-sm leading-6 text-blue-300">Frente a la plaza principal. Estacionamiento disponible cerca.</p>
+                </Link>
+                <p className="text-sm leading-6 text-blue-300">
+                  Estamos ubicados en la calle Diamante, justo en la división de calles, a un costado de la ferretería.
+                </p>
               </div>
             </div>
 
-            <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-blue-900 shadow-2xl shadow-black/25">
+            <div className="overflow-hidden rounded-4xl border border-white/10 bg-blue-900 shadow-2xl shadow-black/25">
               {activeMap ? (
-                // <iframe
-                //   src={mapEmbed}
-                //   width="100%"
-                //   height="100%"
-                //   style={{ border: 0 }}
-                // />
                 <iframe
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3734.5699959245126!2d-100.39956912398063!3d20.605610902176267!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d35ad8daea0377%3A0x54a5fbc460d5b037!2sVeterinary%20Clinic%20Animal&#39;s!5e0!3m2!1sen!2smx!4v1781883026038!5m2!1sen!2smx"
                   // src={mapEmbed}
@@ -461,8 +480,8 @@ export default function Home() {
               ) : (
                 <button
                   type="button"
-                  onClick={() => setActiveMap(true)}
-                  className="flex h-[420px] w-full flex-col items-center justify-center gap-4 bg-[radial-gradient(circle_at_top,rgba(220,38,38,0.2),transparent_45%),linear-gradient(160deg,rgba(15,23,42,0.95),rgba(15,23,42,0.75))] px-6 text-center"
+                  // onClick={() => setActiveMap(true)}
+                  className="flex h-105 w-full flex-col items-center justify-center gap-4 bg-[radial-gradient(circle_at_top,rgba(220,38,38,0.2),transparent_45%),linear-gradient(160deg,rgba(15,23,42,0.95),rgba(15,23,42,0.75))] px-6 text-center"
                 >
                   <span className="material-symbols-outlined text-[56px] text-red-400">map</span>
                   <span className="text-lg font-semibold">Toca para cargar el mapa</span>
@@ -477,7 +496,7 @@ export default function Home() {
 
         <section id="contacto" className="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
           <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
-            <div className="rounded-[2rem] border border-blue-200 bg-white p-7 shadow-xl shadow-blue-200/60 sm:p-8">
+            <div className="rounded-4xl border border-blue-200 bg-white p-7 shadow-xl shadow-blue-200/60 sm:p-8">
               <p className="text-sm font-semibold uppercase tracking-[0.28em] text-red-600">Contacto</p>
               <h2 className="mt-3 text-3xl font-black tracking-tight text-blue-950 sm:text-4xl">Agenda la atención de tu mascota hoy</h2>
               <p className="mt-4 max-w-2xl text-base leading-7 text-blue-600">
@@ -485,31 +504,31 @@ export default function Home() {
               </p>
 
               <div className="mt-8 grid gap-4 sm:grid-cols-3">
-                <a href={callLink} className="flex items-center gap-4 rounded-3xl border border-blue-200 bg-blue-50 p-5 transition hover:border-red-200 hover:bg-red-50">
+                <Link href={callLink} className="flex items-center gap-4 rounded-3xl border border-blue-200 bg-blue-50 p-5 transition hover:border-red-200 hover:bg-red-50">
                   <span className="material-symbols-outlined text-[28px] text-red-600">call</span>
                   <div>
                     <p className="text-sm font-semibold text-blue-950">Llamar</p>
                     <p className="text-sm text-blue-600">{phoneNumber}</p>
                   </div>
-                </a>
-                <a href={whatsappLink} className="flex items-center gap-4 rounded-3xl border border-blue-600 bg-blue-100 p-5 transition hover:bg-blue-200">
+                </Link>
+                <Link href={whatsappLink} className="flex items-center gap-4 rounded-3xl border border-blue-600 bg-blue-100 p-5 transition hover:bg-blue-200">
                   <span className="material-symbols-outlined text-[28px] text-red-600">chat</span>
                   <div>
                     <p className="text-sm font-semibold text-blue-950">WhatsApp</p>
                     <p className="text-sm text-blue-600">{phoneNumber}</p>
                   </div>
-                </a>
-                <a href={emailLink} className="flex items-center gap-4 rounded-3xl border border-blue-200 bg-blue-50 p-5 transition hover:border-red-200 hover:bg-red-50">
+                </Link>
+                <Link href={emailLink} className="flex items-center gap-4 rounded-3xl border border-blue-200 bg-blue-50 p-5 transition hover:border-red-200 hover:bg-red-50">
                   <span className="material-symbols-outlined text-[28px] text-red-600">email</span>
                   <div>
                     <p className="text-sm font-semibold text-blue-950">Correo</p>
                     <p className="text-sm text-blue-600">hola@animalsveterinaria.com</p>
                   </div>
-                </a>
+                </Link>
               </div>
             </div>
 
-            <div className="rounded-[2rem] border border-blue-200 bg-blue-950 p-7 text-white shadow-xl shadow-blue-200/60 sm:p-8">
+            <div className="rounded-4xl border border-blue-200 bg-blue-950 p-7 text-white shadow-xl shadow-blue-200/60 sm:p-8">
               <p className="text-sm font-semibold uppercase tracking-[0.28em] text-red-400">Horario</p>
               <h3 className="mt-3 text-2xl font-black">Estamos listos para atender</h3>
               <div className="mt-6 space-y-3">
@@ -551,46 +570,46 @@ export default function Home() {
               <p className="text-sm font-semibold uppercase tracking-[0.24em] text-blue-400">Links</p>
               <div className="mt-3 flex flex-col gap-2">
                 {quickLinks.map(([label, href]) => (
-                  <a key={label} href={href} className="text-sm text-blue-600 transition hover:text-blue-950">
+                  <Link key={label} href={href} className="text-sm text-blue-600 transition hover:text-blue-950">
                     {label}
-                  </a>
+                  </Link>
                 ))}
               </div>
             </div>
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.24em] text-blue-400">Redes</p>
               <div className="mt-3 flex gap-3">
-                <a href="https://www.facebook.com/p/Clinica-Veterinaria-Animals-100066834454900/" className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-blue-950 text-white">
+                <Link href="https://www.facebook.com/p/Clinica-Veterinaria-Animals-100066834454900/" className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-blue-950 text-white">
                   <span className="material-symbols-outlined text-[22px]">photo_camera</span>
-                </a>
-                <a href="https://maps.app.goo.gl/fhworHdvXFFFGTUf8" className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-blue-950 text-white">
+                </Link>
+                <Link href="https://maps.app.goo.gl/fhworHdvXFFFGTUf8" className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-blue-950 text-white">
                   <span className="material-symbols-outlined text-[22px]">public</span>
-                </a>
+                </Link>
               </div>
             </div>
           </div>
           <span className="self-center text-sm text-blue-600">
-            Desarrollado por <a href="https://bout.sh" className="font-semibold text-blue-950 underline transition hover:text-red-600">Bout</a>
+            Desarrollado por <Link href="https://bout.sh" className="font-semibold text-blue-950 underline transition hover:text-red-600">Bout</Link>
           </span>
         </div>
       </footer>
 
-      <a
+      <Link
         href={whatsappLink}
         className="fixed bottom-4 right-4 z-50 inline-flex items-center gap-2 rounded-full bg-red-600 px-4 py-3 text-sm font-semibold text-white shadow-2xl shadow-red-600/30 transition hover:bg-red-700 sm:bottom-6 sm:right-6"
       >
         <span className="material-symbols-outlined text-[20px]">chat</span>
         WhatsApp
-      </a>
+      </Link>
 
       {selectedImage ? (
         <div
           role="dialog"
           aria-modal="true"
-          className="fixed inset-0 z-[60] flex items-center justify-center bg-blue-950/90 px-4 py-6 backdrop-blur-sm"
+          className="fixed inset-0 z-60 flex items-center justify-center bg-blue-950/90 px-4 py-6 backdrop-blur-sm"
           onClick={() => setSelectedImage(null)}
         >
-          <div className="relative w-full max-w-5xl overflow-hidden rounded-[2rem] border border-white/10 bg-white shadow-2xl" onClick={(event) => event.stopPropagation()}>
+          <div className="relative w-full max-w-5xl overflow-hidden rounded-4xl border border-white/10 bg-white shadow-2xl" onClick={(event) => event.stopPropagation()}>
             <button
               type="button"
               onClick={() => setSelectedImage(null)}
@@ -598,12 +617,11 @@ export default function Home() {
             >
               <span className="material-symbols-outlined text-[22px]">close</span>
             </button>
-            <div className="relative aspect-[16/10] w-full bg-blue-100">
-              <Image src={selectedImage.src} alt={selectedImage.alt} fill sizes="100vw" className="object-cover" />
+            <div className="relative aspect-16/10 w-full bg-blue-100">
+              <img src={selectedImage.src} alt={selectedImage.alt} sizes="100vw" className="object-cover" />
             </div>
             <div className="p-5">
               <p className="text-sm font-semibold text-blue-950">{selectedImage.label}</p>
-              <p className="mt-1 text-sm text-blue-600">Imagen de muestra con ruta placeholder. Reemplázala cuando tengas el material final.</p>
             </div>
           </div>
         </div>
